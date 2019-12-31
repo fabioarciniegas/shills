@@ -1,0 +1,45 @@
+<script>
+
+    var progressSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/film_scrapping/');
+
+    progressSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var message = data['message'];
+    document.querySelector('#id_'+data['film']).style["width"]=data['percentage']+"%";
+    if(data['percentage'] == '100'){
+       $('#id_'+data['film']+'_parent').collapse('hide');
+       $('#id_'+data['film']+'_done').collapse('show');    
+    }
+    };
+</script>
+{% for f in films.all %}
+<a href="/{{f.id}}/">
+  <div>
+  <p><strong>{{f.title}}</strong>
+    <span class="pull-right text-muted"></span>
+  </p>
+  {% if f.scraped_completion < 100 %} 
+  <div id="id_{{f.id}}_parent" class="collapse in progress progress-striped active">
+    <div id="id_{{f.id}}" class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 10%">
+      <span class="sr-only">0% Complete</span>
+    </div>
+  </div>
+  {% endif %}
+  {% if f.scraped_completion == 100 and f.topics_completion < 100 %} 
+  <div id="id_{{f.id}}_parent"  class="collapse in progress progress-striped active">
+    <div id="id_{{f.id}}" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 10%">
+      <span class="sr-only">0% Complete</span>
+    </div>
+  </div>
+  {% endif %}
+  </div>
+</a>
+{% endfor %}
+<a href="/films">See all ...</a>
+
+
+<!--
+Last action<div id="info"></div>
+-->

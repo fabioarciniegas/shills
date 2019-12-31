@@ -1,0 +1,130 @@
+{% load essentials %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <title>Identify Shills - All reviews </title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'evaluate/support_sb-admin-2/bootstrap/css/bootstrap.css' %}" rel="stylesheet">    
+
+    <!-- MetisMenu CSS -->
+    <link href="{% static 'evaluate/support_sb-admin-2/metisMenu/metisMenu.min.css' %}" rel="stylesheet">
+
+    
+    <!-- Custom CSS -->
+    <link href="{% static 'evaluate/sb-admin-2/css/sb-admin-2.css' %}" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="{% static 'evaluate/support_sb-admin-2/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+    <style>
+      .shady {
+      background-color: #c5aeae;
+      }
+    </style>
+  </head>
+
+  <body>
+      <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+          <div class="navbar-brand">You can use the button to manually classify the language of a review as convoluted, backhanded, apologetic ("backhanded").		   
+</div> 
+        </div>
+</nav>    
+{% if filmid %}
+{% endif %}
+<div class="col-lg-16">
+  <div class="panel-body">
+    {% for r in reviews %}
+    <ul class="chat">
+      <li class="left clearfix 	{% if r.manually_flagged_as_shady %}shady{%endif%}" id="review_{{r.id}}">
+        <span class="chat-img pull-left'%}">
+	  <button class="btn btn-primary" onclick="ajax_toggle_shady({{r.id}})">
+	    manually classify as "backhanded" language
+	  </button>
+        </span>
+        <div class="chat-body clearfix">
+          <div class="header">
+            <strong class="primary-font">Score:{{ r.cached_score|floatformat:2 }} (Incongruent Language to Rating:{{ r.congruency_score|floatformat:1 }}, Backhanded language:{{ r.convolution_score|floatformat:1 }}, Unusual Topics+ Unusual scores <span data-toggle="tooltip" title="Topical Discrepancy">{{ r.topicality_score|floatformat:1 }})</span></strong>
+	    <small class="pull-left text-muted"> 
+	      {% for i in r.rating|full_stars %}
+              <i class="fa fa-star fa-fw"></i>	      
+  	      {% endfor %}
+	      {% for i in r.rating|half_stars %}		  
+	      <i class="fa fa-star-half fa-fw"></i>
+  	      {% endfor %}		  
+            </small>
+          </div>
+	</div>
+        <p>
+	  {{ r.text}}
+	          <span class="chat-img pull-left'%}">
+	  {{ r.cached_score|shill|safe}}
+        </span>
+
+        </p>
+      </li>
+    </ul>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- jQuery -->
+<script src="{% static 'evaluate/support_sb-admin-2/jquery/jquery.min.js'%}"></script> 
+
+<!-- Bootstrap Core JavaScript -->
+<script src="{% static 'evaluate/support_sb-admin-2/bootstrap/js/bootstrap.min.js'%}"></script>
+
+<!-- popper -->
+<script type="text/javascript"  src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js"></script>
+
+
+<!-- Metis Menu Plugin JavaScript -->
+<script src="{% static 'evaluate/support_sb-admin-2/metisMenu/metisMenu.min.js'%}"></script>
+
+
+<!-- Custom Theme JavaScript -->
+<script src="{% static 'evaluate/sb-admin-2/js/sb-admin-2.js' %}"></script>
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip(); 
+});
+
+function ajax_toggle_shady(review){
+$.get('/tgs/'+review);
+li = $('#review_'+review)
+if(li.hasClass("shady")){
+   li.removeClass("shady")
+}
+else{
+   li.addClass("shady")
+}
+
+
+}
+
+
+
+</script>
+
+</body>
+
+</html>
+
+  

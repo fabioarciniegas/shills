@@ -1,0 +1,39 @@
+{% load static %}
+
+{% if not done_topics %}
+  {% if not done_scrapping %}
+   <h1>Gathering data...</h1>
+   <p>
+      The reviews are being scraped. <br/>
+      You can pick another movie in the meantime.</p>
+   {% else %}
+   <h1>Analysis brewing...</h1>
+   <p>
+      Analysis will be shown here once all topics are inferred and scores are calculated. <br/>
+      You can pick another movie in the meantime.</p>
+   {% endif %}
+   <div id="id_{{film.id}}_done" class="collapse">
+     <a href="/{{film.id}}" class="btn btn-lg" role="button" aria-disabled="true">Done! click to see</a>     
+   </div>
+
+{% else %}
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="{% static 'evaluate/d3.parcoords.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'evaluate/d3.parcoords.css' %}">
+<div id="example" class="parcoords" style="width:850px;height:250px"></div>
+
+<script>
+  
+  var topics = {{ topics_json|safe }};
+  
+var pc = d3.parcoords()("#example")
+  .data(topics)
+  .render()
+  .hideAxis(["doc"])
+  .createAxes()
+  .brushMode("1D-axes")  // enable brushing
+  .reorderable();
+</script>
+
+{% endif %}

@@ -1,0 +1,9 @@
+stop-words = "film_27-stopwords.txt"
+index = "film_27-idx"
+corpus = "line.toml"
+dataset = "film_27"
+prefix = "."
+[[analyzers]]
+	filter = "default-unigram-chain"
+	ngram = 1
+	method = "ngram-word"

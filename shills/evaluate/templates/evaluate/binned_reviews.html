@@ -1,0 +1,37 @@
+<div id="sankey_basic" style="width: 900px; height: 300px;"></div>
+
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['sankey']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'From');
+        data.addColumn('string', 'To');
+        data.addColumn('number', 'Weight');
+        data.addRows({{ predicted_to_rating_weights|safe }} );
+
+      var colors = ["FF0050","FF0010","FF4600","FF6e00","FF9600","FFbe00","d7ff00","3eff00","00fff4","00b4ff","0074ff"
+      ];
+
+    var options = {
+      height: 400,
+      width:800,
+
+      sankey: {
+        iterations: 0,
+        node: {
+          colors: colors
+        },
+        link: {
+          colorMode: 'gradient',
+          colors: colors
+        }
+      }
+      };
+      
+        // Instantiates and draws our chart, passing in some options.
+        var chart = new google.visualization.Sankey(document.getElementById('sankey_basic'));
+        chart.draw(data, options);
+      }
+    </script>

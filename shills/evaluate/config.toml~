@@ -1,0 +1,10 @@
+prefix = "."
+dataset = "film_1"
+corpus = "line.toml"
+index = "film_1-idx"
+stop-words = "lemur-stopwords.txt"
+
+[[analyzers]]
+method = "ngram-word"
+ngram = 1
+filter = "default-unigram-chain"

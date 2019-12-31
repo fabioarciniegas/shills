@@ -1,0 +1,32 @@
+{% load essentials %}
+
+<div class="col-lg-4">
+  {% for r in reviews %}
+  <div class="panel-body">
+    <ul class="chat">
+      <li class="{% cycle 'left' 'right' %} clearfix">
+        <span class="chat-img {% cycle 'pull-left' 'pull-right' %}">
+          <img src="http://placehold.it/50/d9534f/fff?text=SHILL" class="img-circle" />
+        </span>
+        <div class="chat-body clearfix">
+          <div class="header">
+            <strong class="primary-font">Legitimate</strong>
+            <small class="pull-right text-muted"> {{r.rating}}
+
+	      {% for i in r.rating|full_stars %}
+              <i class="fa fa-star fa-fw"></i>	      
+  	      {% endfor %}
+	      {% for i in r.rating|half_stars %}		  
+	      <i class="fa fa-star-half fa-fw"></i>
+  	      {% endfor %}		  
+            </small>
+          </div>
+          <p>
+	    {{ r.text }}
+          </p>
+        </div>
+      </li>
+    </ul>
+  </div>
+  {% endfor %}
+</div>

@@ -1,0 +1,5 @@
+<ul>
+{% for f in films %}
+    <li>{{ f.title }}</li>
+{% endfor %}
+</ul>

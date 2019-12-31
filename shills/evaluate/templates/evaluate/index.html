@@ -1,0 +1,355 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <title>Identify Shills - Details Interface</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'evaluate/support_sb-admin-2/bootstrap/css/bootstrap.css' %}" rel="stylesheet">    
+
+    <!-- MetisMenu CSS -->
+    <link href="{% static 'evaluate/support_sb-admin-2/metisMenu/metisMenu.min.css' %}" rel="stylesheet">
+
+    
+    <!-- Custom CSS -->
+    <link href="{% static 'evaluate/sb-admin-2/css/sb-admin-2.css' %}" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="{% static 'evaluate/support_sb-admin-2/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+  </head>
+
+  <body>
+{% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+{% endfor %}
+    <div id="wrapper">
+
+      <!-- Navigation -->
+      <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+          <div class="navbar-brand">Shill Detection - Details Console - Fabio Arciniegas (Text Analysis CS410 Fall 2018) - {{ version }}</div> 
+        </div>
+        <!-- /.navbar-header -->
+
+
+        <div class="sidebar" role="navigation">
+          <div class="sidebar-nav navbar-collapse">
+            <ul class="nav" id="side-menu">
+              <li class="sidebar-search">
+                <div class="input-group custom-search-form">
+
+		  {% include "evaluate/search.html" %}
+		  
+                </div>
+                <!-- /input-group -->
+              </li>
+              <li>
+                <a href="#"><i class="fa fa-heart-o fa-fw"></i> Sentiment Scale Controls<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+		<li>
+		  <form action="{% url 'preferences' %}" method="post">
+		    {% csrf_token %}
+		    {{ sentiment_form.as_table }}
+		    <input class="btn" type="submit" value="Update">
+		  </form>
+		</li>
+                </ul>
+                <!-- /.nav-second-level -->
+              </li>
+              <li>
+                <a href="#"><i class="fa fa-comments-o fa-fw"></i> Topic Discrepancy Controls<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+		  <li>
+		    <form action="{% url 'preferences' %}" method="post">
+		      {% csrf_token %}
+		      {{ topic_form.as_table }}
+		      <input class="btn" type="submit" value="Update">
+		    </form>
+		  </li>
+                </ul>
+		
+              </li>
+              <li>
+                <a href="#"><i class="fa fa-paw fa-fw"></i>Language Style Controls<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+		  <li>
+		    <form action="{% url 'preferences' %}" method="post">
+		      {% csrf_token %}
+		      {{ language_form.as_table }}
+		      <input class="btn" type="submit" value="Update">
+		    </form>
+		  </li>
+                </ul>
+                <!-- /.nav-second-level -->
+              </li>
+              <li>
+                <a href="#"><i class="fa fa-tachometer fa-fw"></i> Combination Weights<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                  <li>
+<form action="{% url 'preferences' %}" method="post">
+    {% csrf_token %}
+    {{ score_form }}
+    <input class="btn" type="submit" value="Update">
+</form>
+		  </li>		  		    
+                </ul>
+                <!-- /.nav-second-level -->
+              </li>
+              <li>
+                <a href="#"><i class="fa fa-film fa-fw"></i> Recently Processed Movies:</a>
+
+		  {% include "evaluate/films.html" %}		
+              </li>
+
+	      
+            </ul>
+            </ul>
+	    
+          </div>
+          </div>
+          <!-- /.sidebar-collapse -->
+	  
+        </div>
+        <!-- /.navbar-static-side -->
+      </nav>
+
+      <div id="page-wrapper">
+        <div class="row">
+	  <div class="col-lg-8">
+	    <div class="row">
+	      <div class="col-lg-12">
+                <h1 class="page-header">Reviews for {{film.title}}
+		  {% if show_recalculate %}<span><a class="button btn-success" href="/{{film.id}}?force=1"> <i class="fa fa-spinner"></i>recalculate scores... </a></span>{%endif%}</h1> 
+	      </div>
+	    </div> <!-- title row-->
+            <div class="row">
+              <div class="col-lg-4 col-md-5">
+                <div class="panel panel-primary">
+                  <div class="panel-heading">
+                    <div class="row">
+                      <div class="col-xs-3">
+                        <i class="fa fa-file-text-o fa-2x"></i>
+                      </div>
+                      <div class="col-xs-9 text-right">
+                        <div class="large">{{total_reviews}}</div>
+                        <div>Reviews</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="panel panel-yellow">
+                  <div class="panel-heading">
+                    <div class="row" data-toggle="tooltip" title="Reviews with one or more individual score above threshold">
+                      <div class="col-xs-3">
+                        <i class="fa fa-tasks fa-2x"></i>
+                      </div>
+                      <div class="col-xs-9 text-right">
+                        <div class="large">{{num_suspicious}}</div>
+                        <div>Suspicious</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6">
+                <div class="panel panel-red">
+                  <div class="panel-heading">
+                    <div class="row">
+                      <div class="col-xs-3">
+                        <i class="fa fa-eye-slash fa-2x"></i>
+                      </div>
+                      <div class="col-xs-9 text-right">
+                        <div class="large">{{num_shills}}</div>
+                        <div>Shills</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.row -->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <i class="fa fa-bar-chart-o fa-fw"></i> Topics
+              </div>
+              <!-- /.panel-heading -->
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-lg-12">
+		    {% include "evaluate/parallel_topics.html" %}
+                  </div>
+                </div>
+                <!-- /.row -->
+              </div>
+              <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+          </div>
+        </div>
+
+{% if done_topics %}
+	
+	<!-- /.panel row -->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <i class="fa fa-bar-chart-o fa-fw"></i> Distribution of Ratings and Favorite Topics
+              </div>
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-lg-16">
+                  <div style="float:left" id="ratings_distribution"></div>
+		  <div style="float:right" id="topics_distribution"></div>
+    		  {% if done_topics %}
+		    <script type="text/javascript">
+    google.charts.load("current", {packages:["corechart"]});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+
+    var data = new google.visualization.DataTable();
+    data.addColumn('number', 'Rating');
+    data.addColumn('number', 'Percentage');
+    data.addRows({{ film.rating_distribution|safe }});
+    data.sort(1);
+
+    var view = new google.visualization.DataView(data);
+
+      var options = {
+        width: 400,
+        height: 300,
+        title: "Distribution of ratings",
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.BarChart(document.getElementById("ratings_distribution"));
+      chart.draw(view, options);
+  }
+  </script>
+		    <script type="text/javascript">
+    google.charts.load("current", {packages:["corechart"]});
+    google.charts.setOnLoadCallback(drawTopicDistribution);
+    function drawTopicDistribution() {
+
+    var topic_data = new google.visualization.DataTable();
+    topic_data.addColumn('string', 'Topic');
+    topic_data.addColumn('number', 'Percentage');
+    topic_data.addRows({{ film.calculate_topic_z_scores|safe }});
+    topic_data.sort(1);
+
+    var view = new google.visualization.DataView(topic_data);
+
+      options = {
+        width: 400,
+        height: 300,
+        title: "Distribution of favorite topics (top 1)",
+        legend: { position: "none" },
+      };
+      var chart2 = new google.visualization.BarChart(document.getElementById("topics_distribution"));
+      chart2.draw(view, options);
+  }
+		    </script>
+		    {% endif %}
+		  </div>
+                </div>
+                <!-- /.row -->
+              </div>
+              <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+          </div>
+        </div>
+	<!-- /.panel row -->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <i class="fa fa-bar-chart-o fa-fw"></i> Binned Sentiment Analysis
+              </div>
+              <!-- /.panel-heading -->
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-lg-12">
+
+	      		{% include "evaluate/binned_reviews.html" %}
+
+
+			<br/>			<br/>			<br/>			<br/>			<br/>
+
+
+
+			
+                  </div>
+                </div>
+                <!-- /.row -->
+{% endif %}				
+              </div>
+              <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+          </div>
+        </div>
+
+          </div>
+	  <!-- / left column  -->
+
+{% if done_topics %}	  
+	  <!-- INDIVIDUAL REVIEWS -->
+	  {% include "evaluate/reviews.html" with reviews=shill_reviews filmid=film.id %}
+	  {% include "evaluate/reviews.html" with reviews=mixed_reviews %}
+	  {% include "evaluate/reviews.html" with reviews=fair_reviews %}	  
+{% endif %}	  
+	  
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- jQuery -->
+<script src="{% static 'evaluate/support_sb-admin-2/jquery/jquery.min.js'%}"></script> 
+
+<!-- Bootstrap Core JavaScript -->
+<script src="{% static 'evaluate/support_sb-admin-2/bootstrap/js/bootstrap.min.js'%}"></script>
+
+<!-- popper -->
+<script type="text/javascript"  src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js"></script>
+
+
+<!-- Metis Menu Plugin JavaScript -->
+<script src="{% static 'evaluate/support_sb-admin-2/metisMenu/metisMenu.min.js'%}"></script>
+
+
+<!-- Custom Theme JavaScript -->
+<script src="{% static 'evaluate/sb-admin-2/js/sb-admin-2.js' %}"></script>
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip(); 
+});
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,5 @@
+import metapy
+
+fidx = metapy.index.make_forward_index('all.toml')
+print(fidx.num_labels())
+

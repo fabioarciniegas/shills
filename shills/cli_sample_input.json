@@ -1,0 +1,10 @@
+{
+    "InputDataConfig": {
+        "S3Uri": "s3://input_bucket/godfather",
+        "InputFormat": "ONE_DOC_PER_FILE"
+    },
+    "OutputDataConfig": {
+        "S3Uri": "s3://output bucket/godfather"
+    },
+    "DataAccessRoleArn": "arn:aws:iam::account ID:role/data access role"
+}

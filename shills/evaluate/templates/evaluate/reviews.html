@@ -1,0 +1,39 @@
+{% load essentials %}
+{% if filmid %}
+Showing representatives of positive/negative below. <a href="/{{filmid}}/all">See all...</a>
+{% endif %}
+<div class="col-lg-4">
+  <div class="panel-body">
+    {% for r in reviews %}
+    <ul class="chat">
+      <li class="{% cycle 'left' 'right' %} clearfix">
+        <span class="chat-img {% cycle 'pull-left' 'pull-right' %}">
+	  {{ r.cached_score|shill|safe}}
+        </span>
+        <div class="chat-body clearfix">
+          <div class="header">
+            <strong class="primary-font">Score:{{ r.cached_score|floatformat:2 }} ({{ r.congruency_score|floatformat:1 }},{{ r.convolution_score|floatformat:1 }}, <span data-toggle="tooltip" title="Topical Discrepancy">{{ r.topicality_score|floatformat:1 }})</span></strong>
+	    <div class="tooltip bs-tooltip-top" role="tooltip">
+	      <div class="arrow"></div>
+	      <div class="tooltip-inner">
+		Explain formula here
+	      </div>
+	    </div>
+	    <small class="pull-right text-muted"> 
+	      {% for i in r.rating|full_stars %}
+              <i class="fa fa-star fa-fw"></i>	      
+  	      {% endfor %}
+	      {% for i in r.rating|half_stars %}		  
+	      <i class="fa fa-star-half fa-fw"></i>
+  	      {% endfor %}		  
+            </small>
+          </div>
+          <p>
+	    {{ r.text|truncatechars:256 }}
+          </p>
+        </div>
+      </li>
+    </ul>
+    {% endfor %}
+  </div>
+</div>

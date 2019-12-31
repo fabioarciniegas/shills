@@ -1,0 +1,14 @@
+stop-words = "manually_tagged_backhanded-stopwords.txt"
+index = "manually_tagged_backhanded-idx"
+corpus = "line.toml"
+dataset = "manually_tagged_backhanded"
+prefix = "."
+[[classifier]]
+	method = "one-vs-all"
+	[classifier.base]
+		loss = "hinge"
+		method = "sgd"
+[[analyzers]]
+	filter = "default-unigram-chain"
+	ngram = 1
+	method = "ngram-word"

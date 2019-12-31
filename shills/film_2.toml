@@ -1,0 +1,10 @@
+ prefix = "."
+dataset = "film_2"
+corpus = "line.toml"
+index = "film_2-idx"
+stop-words = "film_2-stopwords.txt"
+
+[[analyzers]]
+method = "ngram-word"
+ngram = 1
+filter = "default-unigram-chain"

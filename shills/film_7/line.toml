@@ -1,0 +1,4 @@
+
+# file: line.toml
+type = "line-corpus"
+encoding = "utf-8"
